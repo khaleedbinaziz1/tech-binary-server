@@ -27,11 +27,21 @@ client.connect(err => {
     const bookingCollection = client.db("buildTech").collection("bookings");
     const reviewCollection = client.db("buildTech").collection("reviews");
     const serviceCollection = client.db("buildTech").collection("services");
+    const adminCollection = client.db("buildTech").collection("admins");
+
 
     app.post('/addBooking', (req, res) => {
         const booking = req.body;
         console.log(booking);
         bookingCollection.insertOne(booking)
+            .then(result => {
+                res.send(result.insertedCount)
+            })
+    });
+    app.post('/addAdmin', (req, res) => {
+        const admin = req.body;
+        console.log(admin);
+        adminCollection.insertOne(admin)
             .then(result => {
                 res.send(result.insertedCount)
             })
@@ -96,6 +106,14 @@ client.connect(err => {
                 res.send(documents);
             })
     });
+    
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email;
+        adminCollection.find({email: email})
+        .toArray((err, admins) => {
+            res.send(admins.length > 0);
+        })
+    })
 });
 
 app.listen(process.env.PORT || port)
