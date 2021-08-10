@@ -4,6 +4,7 @@ const cors = require('cors');
 const fs = require('fs-extra');
 const fileUpload = require('express-fileupload');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config()
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ujcbv.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
@@ -106,6 +107,12 @@ client.connect(err => {
                 res.send(documents);
             })
     });
+    app.delete('/delete/:id', (req, res) => {
+        serviceCollection.deleteOne({_id: ObjectId(req.params.id)})
+        .then( result => {
+          console.log(result)
+        })
+      })
     
     app.post('/isAdmin', (req, res) => {
         const email = req.body.email;
