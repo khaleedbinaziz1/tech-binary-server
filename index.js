@@ -88,13 +88,13 @@ client.connect(err => {
                 res.send(result.insertedCount > 0)
             })
     })
+
     app.get('/bookings', (req, res) => {
         bookingCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
             })
     });
-
     app.get('/reviews', (req, res) => {
         reviewCollection.find({})
             .toArray((err, documents) => {
